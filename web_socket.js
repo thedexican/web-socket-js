@@ -40,30 +40,38 @@
   /**
    * Our own implementation of WebSocket class using Flash.
    * @param {string} url
-   * @param {array or string} protocols
-   * @param {string} proxyHost
-   * @param {int} proxyPort
-   * @param {string} headers
+   * options  = {}
+    * @param {array or string} protocols
+    * @param {string} proxyHost
+    * @param {int} proxyPort
+    * @param {int} policyPort
+    * @param {string} headers
    */
-  window.WebSocket = function(url, protocols, proxyHost, proxyPort, headers) {
+  window.WebSocket = function(url, options) {
     var self = this;
     self.__id = WebSocket.__nextId++;
     WebSocket.__instances[self.__id] = self;
     self.readyState = WebSocket.CONNECTING;
     self.bufferedAmount = 0;
     self.__events = {};
-    if (!protocols) {
-      protocols = [];
-    } else if (typeof protocols == "string") {
-      protocols = [protocols];
+    if (!options.protocols) {
+      options.protocols = [];
+    } else if (typeof options.protocols == "string") {
+      options.protocols = [options.protocols];
     }
     // Uses setTimeout() to make sure __createFlash() runs after the caller sets ws.onopen etc.
     // Otherwise, when onopen fires immediately, onopen is called before it is set.
     self.__createTask = setTimeout(function() {
       WebSocket.__addTask(function() {
         self.__createTask = null;
-        WebSocket.__flash.create(
-            self.__id, url, protocols, proxyHost || null, proxyPort || 0, headers || null);
+        WebSocket.__flash.create(self.__id, 
+                                 url,
+                                 options.protocols,
+                                 options.proxyHost || null,
+                                 options.proxyPort || 0,
+                                 options.policyPort || 843,
+                                 options.headers || null
+                                 );
       });
     }, 0);
   };

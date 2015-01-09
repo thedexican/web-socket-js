@@ -1,2 +1,2 @@
 # Point this to your Flex SDK directory.
-FLEX_HOME=/usr/local/share/flex_sdk_4
+FLEX_HOME=/Users/dex/Downloads/flex_sdk_4.1
